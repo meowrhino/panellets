@@ -1,0 +1,34 @@
+[
+  {
+    "year": 2026,
+    "kinds": { "coco": 25, "xocolata": 30, "ametlles": 70, "pinyons": 40 },
+    "ingredients": [
+      { "name": "de almendra molida", "amount": 1000, "unit": "g" },
+      { "name": "azucar", "amount": 1000, "unit": "g" },
+      { "name": "de moniato asado", "amount": 500, "unit": "g", "note": "comprar 1kg para hacer 500 gramos y sobrara" },
+      { "name": "ous", "amount": 5, "unit": "u" },
+      { "name": "de coco rallat", "amount": 115, "unit": "g", "kind": "coco" },
+      { "name": "tauleta de xocolata de postres", "amount": 0.5, "unit": "", "kind": "xocolata" },
+      { "name": "cullerades de cacao amb pols", "amount": 2, "unit": "", "kind": "xocolata" },
+      { "name": "ametlla matxacada", "amount": 375, "unit": "g", "kind": "ametlles" },
+      { "name": "de pinyons", "amount": 350, "unit": "g", "kind": "pinyons" }
+    ],
+    "extras": ["moscatell"],
+    "notes": [
+      "el doble de panellets de xocolata",
+      "més panellets",
+      "fer els boniatos el dia abans"
+    ],
+    "shopping": [
+      "2kg de moniato per fer al forn",
+      "2kg sucre",
+      "2kg de ametlla molta",
+      "2 bosses coco rallat",
+      "1 tauleta de xocolata",
+      "500g pinyons",
+      "350g ametlla maxacada",
+      "10 ous",
+      "moscatell"
+    ]
+  }
+]

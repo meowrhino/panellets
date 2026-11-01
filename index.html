@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Panellets</title>
+<style>
+/* una columna estreta: el que vam dir, la calculadora, la recepta i els anys */
+:root {
+  --bg: #EDEFEA; --card: #FAFAF7; --fg: #2B231E; --muted: #6E655E; --line: #D3D5CD; --accent: #A4551A;
+  --k-coco: #BDB296; --k-xocolata: #5B3A27; --k-ametlles: #BF8650; --k-pinyons: #DDAA3E;
+  --display: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --body: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #1B1815; --card: #24201C; --fg: #EEE7DF; --muted: #A69B91; --line: #3A342E; --accent: #E38E4C;
+  --k-coco: #E6DDC8; --k-xocolata: #93613F; --k-ametlles: #CB955E; --k-pinyons: #E7BA52; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #1B1815; --card: #24201C; --fg: #EEE7DF; --muted: #A69B91; --line: #3A342E; --accent: #E38E4C;
+  --k-coco: #E6DDC8; --k-xocolata: #93613F; --k-ametlles: #CB955E; --k-pinyons: #E7BA52; color-scheme: dark }
+
+body { background: var(--bg); color: var(--fg); font: 16px/1.5 var(--body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+main { max-width: 680px; margin: 0 auto; padding-block: 48px 72px; display: grid; gap: 48px; }
+h1, h2, h3 { font-family: var(--display); font-weight: 600; margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(2.6rem, 9vw, 4rem); line-height: 1; font-style: italic; }
+h2 { font-size: 1.6rem; }
+h3 { font-size: 1.25rem; }
+p { margin: 0; }
+.eyebrow { font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.lead { color: var(--muted); max-width: 52ch; }
+header { display: grid; gap: 12px; }
+section { display: grid; gap: 16px; }
+ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; }
+.num { font-variant-numeric: tabular-nums; }
+
+.said { border-left: 3px solid var(--accent); padding: 4px 0 4px 16px; display: grid; gap: 8px; }
+
+.calc { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 20px; display: grid; gap: 20px; }
+.kinds { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; }
+.kinds label { display: grid; gap: 6px; font-size: .9rem; }
+.kinds span { display: flex; align-items: center; gap: 8px; }
+.dot { width: 12px; height: 12px; border-radius: 50%; flex: none; box-shadow: inset 0 0 0 1px rgb(0 0 0 / .15); }
+input[type=number] { font: inherit; font-size: 1.3rem; width: 100%; box-sizing: border-box; padding: 8px 10px;
+  border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--fg); font-variant-numeric: tabular-nums; }
+input:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.total { font-family: var(--display); font-size: 1.4rem; }
+.list { display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; margin: 0; }
+.list dt { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+.list dd { margin: 0; }
+.list small { color: var(--muted); }
+.row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; }
+button { font: inherit; padding: 8px 16px; border-radius: 6px; border: 1px solid var(--accent); background: var(--accent); color: var(--card); cursor: pointer; }
+button:hover { filter: brightness(1.08); }
+#copied { color: var(--muted); font-size: .9rem; }
+
+.year { border-top: 1px solid var(--line); padding-top: 20px; display: grid; gap: 14px; }
+.year header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.year h3 { font-size: 2rem; }
+.bar { display: flex; height: 14px; border-radius: 7px; overflow: hidden; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: .9rem; }
+.chips span { display: flex; align-items: center; gap: 6px; }
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px 32px; }
+.cols > div { display: grid; gap: 6px; align-content: start; min-width: 0; }
+.error { color: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Panellets</h1>
+    <p class="lead">aprox <span id="approx"></span> panellets</p>
+  </header>
+
+  <section id="said" hidden></section>
+
+  <section>
+    <h2>Quants en farem?</h2>
+    <form class="calc" id="calc">
+      <div class="kinds" id="kinds"></div>
+      <p class="total num" id="total"></p>
+      <div>
+        <p class="eyebrow">Llista de la compra</p>
+        <dl class="list" id="shop"></dl>
+      </div>
+      <div class="row">
+        <small class="lead" id="basis"></small>
+        <span><span id="copied" aria-live="polite"></span> <button type="button" id="copy">Copiar la llista</button></span>
+      </div>
+    </form>
+  </section>
+
+  <section id="years">
+    <h2>Any rere any</h2>
+  </section>
+</main>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+const cap = (s) => s[0].toUpperCase() + s.slice(1);
+const sum = (o) => Object.values(o).reduce((a, b) => a + b, 0);
+const nf = (n) => n.toLocaleString('ca', { maximumFractionDigits: 2 });
+
+// La massa (sense "kind") va amb el total; cada cobertura, amb els seus.
+function calc(year, want) {
+  const all = sum(want) / sum(year.kinds);
+  return year.ingredients.map((i) => ({ ...i, amount: i.amount * (i.kind ? (want[i.kind] || 0) / year.kinds[i.kind] : all) }));
+}
+
+function qty({ amount, unit }) {
+  if (unit === 'g') { const g = Math.ceil(amount / 10) * 10; return g >= 1000 ? nf(g / 1000) + ' kg' : g + ' g'; }
+  if (unit === 'u') return String(Math.ceil(amount));
+  return nf(Math.ceil(amount * 2) / 2) + (unit ? ' ' + unit : '');
+}
+
+const dot = (k) => `<i class="dot" style="background:var(--k-${esc(k)}, var(--muted))"></i>`;
+
+function renderYear(y) {
+  const total = sum(y.kinds);
+  const list = (items) => `<ul>${items.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>`;
+  return `<article class="year" id="any-${y.year}">
+    <header><h3 class="num">${y.year}</h3><p class="num"><strong>${total}</strong> panellets</p></header>
+    <div class="bar" role="img" aria-label="${Object.entries(y.kinds).map(([k, n]) => `${n} de ${k}`).join(', ')}">
+      ${Object.entries(y.kinds).map(([k, n]) => `<span style="flex:${n};background:var(--k-${esc(k)}, var(--muted))"></span>`).join('')}
+    </div>
+    <div class="chips num">${Object.entries(y.kinds).map(([k, n]) => `<span>${dot(k)}${n} ${esc(k)}</span>`).join('')}</div>
+    <div class="cols">
+      <div><p class="eyebrow">ingredients</p>${list(y.ingredients.map((i) => `${qty(i)} ${i.name}`))}</div>
+      ${y.notes?.length ? `<div><p class="eyebrow">per l’any que ve</p>${list(y.notes)}</div>` : ''}
+      ${y.shopping?.length ? `<div><p class="eyebrow">Llista compra l’any que ve</p>${list(y.shopping)}</div>` : ''}
+    </div>
+  </article>`;
+}
+
+fetch('data/years.json').then((r) => r.json()).then((years) => {
+  years.sort((a, b) => b.year - a.year);
+  const last = years[0];
+  $('approx').textContent = sum(last.kinds);
+  console.assert(calc(last, last.kinds).every((r, i) => Math.abs(r.amount - last.ingredients[i].amount) < 1e-9), 'calc: amb els mateixos panellets ha de sortir la mateixa recepta');
+
+  if (last.notes?.length) {
+    $('said').hidden = false;
+    $('said').innerHTML = `<div class="said"><p class="eyebrow">per l’any que ve</p><ul>${last.notes.map((n) => `<li>${esc(n)}</li>`).join('')}</ul></div>`;
+  }
+
+  $('kinds').innerHTML = Object.entries(last.kinds).map(([k, n]) =>
+    `<label><span>${dot(k)}${esc(cap(k))}</span><input type="number" id="k-${esc(k)}" data-kind="${esc(k)}" min="0" step="5" inputmode="numeric" value="${n}"></label>`).join('');
+  $('basis').textContent = `Proporcions del ${last.year}. Arrodonit cap amunt.`;
+
+  let text = '';
+  const update = () => {
+    const want = {};
+    $('kinds').querySelectorAll('input').forEach((el) => { want[el.dataset.kind] = Math.max(0, +el.value || 0); });
+    const rows = calc(last, want).filter((r) => r.amount > 0);
+    $('total').textContent = `${sum(want)} panellets`;
+    $('shop').innerHTML = rows.map((r) => `<dt>${esc(qty(r))}</dt><dd>${esc(r.name)}${r.note ? ` <small>· ${esc(r.note)}</small>` : ''}</dd>`).join('')
+      + (last.extras || []).map((e) => `<dt>+</dt><dd>${esc(e)}</dd>`).join('');
+    text = rows.map((r) => `${qty(r)} ${r.name}${r.note ? ` (${r.note})` : ''}`).concat(last.extras || []).join('\n');
+    $('copied').textContent = '';
+  };
+  $('calc').addEventListener('input', update);
+  $('calc').addEventListener('submit', (e) => e.preventDefault());
+  update();
+
+  $('copy').addEventListener('click', () => {
+    navigator.clipboard.writeText('Panellets\n' + text)
+      .then(() => { $('copied').textContent = 'Copiada'; })
+      .catch(() => { getSelection().selectAllChildren($('shop')); $('copied').textContent = 'Seleccionada: copia-la tu'; });
+  });
+
+  $('years').insertAdjacentHTML('beforeend', years.map(renderYear).join(''));
+}).catch(() => {
+  $('years').insertAdjacentHTML('beforeend', '<p class="error">No s\'ha pogut llegir data/years.json. Mira si hi falta una coma.</p>');
+});
+</script>
+</body>
+</html>
