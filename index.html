@@ -6,96 +6,96 @@
 <meta name="robots" content="noindex">
 <title>Panellets</title>
 <style>
-/* una columna estreta: la calculadora i, a sota, el diari de cada any */
+/* panellets — superfícies planes, zero radi, etiquetes petites en minúscula
+   i un títol enorme. El color només el posen els panellets: cada tipus és un
+   bloc pintat del seu color, i cada any es dibuixa com una safata, un punt
+   per panellet. */
 :root {
-  --bg: #EDEFEA; --card: #FAFAF7; --fg: #2B231E; --muted: #6E655E; --line: #D3D5CD; --accent: #A4551A;
-  --k-coco: #BDB296; --k-xocolata: #5B3A27; --k-ametlles: #BF8650; --k-pinyons: #DDAA3E;
-  --display: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-  --body: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --bg: #F3F3F1; --surface: #E7E7E4; --line: #CDCDC8; --text: #222221; --muted: #76766F;
+  --k-coco: #ECE5D3; --i-coco: #222221;
+  --k-xocolata: #4F3122; --i-xocolata: #F3ECE4;
+  --k-ametlles: #C4884E; --i-ametlles: #1D150E;
+  --k-pinyons: #E2B547; --i-pinyons: #1E190C;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --gap: clamp(28px, 5vw, 72px);
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
-  --bg: #1B1815; --card: #24201C; --fg: #EEE7DF; --muted: #A69B91; --line: #3A342E; --accent: #E38E4C;
-  --k-coco: #E6DDC8; --k-xocolata: #93613F; --k-ametlles: #CB955E; --k-pinyons: #E7BA52; color-scheme: dark } }
+  --bg: #161616; --surface: #1F1F1F; --line: #333333; --text: #D6D6D6; --muted: #7E7E7E;
+  --k-xocolata: #835136; color-scheme: dark } }
 :root[data-theme="dark"] {
-  --bg: #1B1815; --card: #24201C; --fg: #EEE7DF; --muted: #A69B91; --line: #3A342E; --accent: #E38E4C;
-  --k-coco: #E6DDC8; --k-xocolata: #93613F; --k-ametlles: #CB955E; --k-pinyons: #E7BA52; color-scheme: dark }
+  --bg: #161616; --surface: #1F1F1F; --line: #333333; --text: #D6D6D6; --muted: #7E7E7E;
+  --k-xocolata: #835136; color-scheme: dark }
 
-body { background: var(--bg); color: var(--fg); font: 16px/1.5 var(--body);
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.6 var(--mono);
   padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
-main { max-width: 680px; margin: 0 auto; padding-block: 48px 72px; display: grid; gap: 48px; }
-h1, h2, h3 { font-family: var(--display); font-weight: 600; margin: 0; text-wrap: balance; }
-h1 { font-size: clamp(2.6rem, 9vw, 4rem); line-height: 1; font-style: italic; }
-h2 { font-size: 1.6rem; }
-h3 { font-size: 1.25rem; }
-p { margin: 0; }
-.eyebrow { font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-.lead { color: var(--muted); max-width: 52ch; }
-header { display: grid; gap: 12px; }
-section { display: grid; gap: 16px; }
-ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; }
-.num { font-variant-numeric: tabular-nums; }
+main { max-width: 860px; margin: 0 auto; padding-block: var(--gap) calc(var(--gap) * 2); display: grid; gap: calc(var(--gap) * 1.5); }
+h1, h2, p { margin: 0; font-weight: 400; }
+h1 { font-size: clamp(56px, 17vw, 168px); line-height: .85; letter-spacing: -.06em; margin-left: -.04em; }
+h2 { font-size: clamp(40px, 10vw, 96px); line-height: .9; letter-spacing: -.05em; font-variant-numeric: tabular-nums; }
+.label { font-size: 11px; color: var(--muted); text-transform: lowercase; letter-spacing: .04em; }
+section { display: grid; gap: 20px; }
+button { font: inherit; color: inherit; background: none; border: 1px solid currentColor; padding: 2px 10px; cursor: pointer; }
+button:hover { background: var(--text); color: var(--bg); border-color: var(--text); }
+:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
 
-.calc { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 20px; display: grid; gap: 20px; }
-.kinds { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; }
-.kinds label { display: grid; gap: 6px; font-size: .9rem; }
-.kinds span { display: flex; align-items: center; gap: 8px; }
-.dot { width: 12px; height: 12px; border-radius: 50%; flex: none; box-shadow: inset 0 0 0 1px rgb(0 0 0 / .15); }
-input[type=number] { font: inherit; font-size: 1.3rem; width: 100%; box-sizing: border-box; padding: 8px 10px;
-  border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--fg); font-variant-numeric: tabular-nums; }
-input:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.total { font-family: var(--display); font-size: 1.4rem; }
-.list { display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; margin: 0; }
-.list dt { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
-.list dd { margin: 0; }
-.list small { color: var(--muted); }
+/* els blocs de cada tipus */
+.clips { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
+@media (max-width: 560px) { .clips { grid-template-columns: repeat(2, 1fr); } }
+.clip { background: var(--k); color: var(--i); padding: 12px; display: grid; gap: 4px; min-width: 0; }
+.clip .label { color: inherit; opacity: .75; }
+.clip input { font: inherit; font-size: clamp(32px, 6vw, 48px); line-height: 1; letter-spacing: -.04em; color: inherit;
+  background: none; border: 0; padding: 0; width: 100%; font-variant-numeric: tabular-nums; -moz-appearance: textfield; }
+.clip input::-webkit-inner-spin-button, .clip input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.clip .steps { display: flex; gap: 6px; }
+.clip button:hover { background: var(--i); color: var(--k); border-color: var(--i); }
+
+/* la safata: un punt per panellet */
+.tray { display: flex; flex-wrap: wrap; gap: 4px; }
+.tray i { width: 11px; height: 11px; border-radius: 50%; background: var(--k); box-shadow: inset 0 0 0 1px rgb(0 0 0 / .12); }
+.total { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.total strong { font-size: 32px; font-weight: 400; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+
+.shop { display: grid; grid-template-columns: max-content 1fr; gap: 2px 20px; margin: 0; border-top: 1px solid var(--line); padding-top: 16px; }
+.shop dt { text-align: right; font-variant-numeric: tabular-nums; }
+.shop dd { margin: 0; min-width: 0; }
+.shop small { color: var(--muted); }
 .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; }
-button { font: inherit; padding: 8px 16px; border-radius: 6px; border: 1px solid var(--accent); background: var(--accent); color: var(--card); cursor: pointer; }
-button:hover { filter: brightness(1.08); }
-#copied { color: var(--muted); font-size: .9rem; }
 
-.year { border-top: 1px solid var(--line); padding-top: 20px; display: grid; gap: 14px; }
-.year header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-.year h3 { font-size: 2rem; }
-.bar { display: flex; height: 14px; border-radius: 7px; overflow: hidden; }
-.chips { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: .9rem; }
-.chips span { display: flex; align-items: center; gap: 6px; }
-.diary { white-space: pre-wrap; overflow-wrap: anywhere; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 20px; }
-.error { color: var(--accent); }
+.year { display: grid; gap: 20px; border-top: 1px solid var(--line); padding-top: 20px; }
+.year header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.diary { white-space: pre-wrap; overflow-wrap: anywhere; background: var(--surface); padding: 20px; max-width: 64ch; }
+.error { color: var(--k-xocolata); }
+@media (prefers-reduced-motion: no-preference) { .tray i { transition: background-color .3s; } }
 </style>
 </head>
 <body>
 <main>
-  <header>
-    <h1>Panellets</h1>
-  </header>
+  <h1>panellets</h1>
 
-  <section>
-    <h2>Quants en farem?</h2>
-    <form class="calc" id="calc">
-      <div class="kinds" id="kinds"></div>
-      <p class="total num" id="total"></p>
-      <div>
-        <p class="eyebrow">Llista de la compra</p>
-        <dl class="list" id="shop"></dl>
-      </div>
-      <div class="row">
-        <small class="lead" id="basis"></small>
-        <span><span id="copied" aria-live="polite"></span> <button type="button" id="copy">Copiar la llista</button></span>
-      </div>
+  <section aria-labelledby="calc-title">
+    <p class="label" id="calc-title">quants en farem?</p>
+    <form id="calc">
+      <div class="clips" id="kinds"></div>
     </form>
+    <div class="total"><strong id="total"></strong><span class="label" id="basis"></span></div>
+    <div class="tray" id="tray"></div>
+    <dl class="shop" id="shop"></dl>
+    <div class="row">
+      <span class="label" id="copied" aria-live="polite"></span>
+      <button type="button" id="copy">copiar la llista</button>
+    </div>
   </section>
 
-  <section id="years">
-    <h2>Any rere any</h2>
-  </section>
+  <section id="years"></section>
 </main>
 
 <script>
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
-const cap = (s) => s[0].toUpperCase() + s.slice(1);
 const sum = (o) => Object.values(o).reduce((a, b) => a + b, 0);
 const nf = (n) => n.toLocaleString('ca', { maximumFractionDigits: 2 });
+const paint = (k) => `--k:var(--k-${esc(k)}, var(--muted));--i:var(--i-${esc(k)}, var(--bg))`;
 
 // La massa (sense "kind") va amb el total; cada cobertura, amb els seus.
 function calc(year, want) {
@@ -109,16 +109,13 @@ function qty({ amount, unit }) {
   return nf(Math.ceil(amount * 2) / 2) + (unit ? ' ' + unit : '');
 }
 
-const dot = (k) => `<i class="dot" style="background:var(--k-${esc(k)}, var(--muted))"></i>`;
+const tray = (kinds) => Object.entries(kinds).map(([k, n]) => `<i style="${paint(k)}"></i>`.repeat(n)).join('');
+const trayLabel = (kinds) => Object.entries(kinds).map(([k, n]) => `${n} de ${k}`).join(', ');
 
 function renderYear(y) {
-  const total = sum(y.kinds);
   return `<article class="year" id="any-${y.year}">
-    <header><h3 class="num">${y.year}</h3><p class="num"><strong>${total}</strong> panellets</p></header>
-    <div class="bar" role="img" aria-label="${Object.entries(y.kinds).map(([k, n]) => `${n} de ${k}`).join(', ')}">
-      ${Object.entries(y.kinds).map(([k, n]) => `<span style="flex:${n};background:var(--k-${esc(k)}, var(--muted))"></span>`).join('')}
-    </div>
-    <div class="chips num">${Object.entries(y.kinds).map(([k, n]) => `<span>${dot(k)}${n} ${esc(k)}</span>`).join('')}</div>
+    <header><h2>${y.year}</h2><span class="label">${sum(y.kinds)} panellets</span></header>
+    <div class="tray" role="img" aria-label="${esc(trayLabel(y.kinds))}">${tray(y.kinds)}</div>
     <div class="diary">${esc((y.diary || []).join('\n'))}</div>
   </article>`;
 }
@@ -128,17 +125,22 @@ fetch('data/years.json').then((r) => r.json()).then((years) => {
   const last = years[0];
   console.assert(calc(last, last.kinds).every((r, i) => Math.abs(r.amount - last.ingredients[i].amount) < 1e-9), 'calc: amb els mateixos panellets ha de sortir la mateixa recepta');
 
-
-  $('kinds').innerHTML = Object.entries(last.kinds).map(([k, n]) =>
-    `<label><span>${dot(k)}${esc(cap(k))}</span><input type="number" id="k-${esc(k)}" data-kind="${esc(k)}" min="0" step="5" inputmode="numeric" value="${n}"></label>`).join('');
-  $('basis').textContent = `Proporcions del ${last.year}. Arrodonit cap amunt.`;
+  $('kinds').innerHTML = Object.entries(last.kinds).map(([k, n]) => `<div class="clip" style="${paint(k)}">
+      <label class="label" for="k-${esc(k)}">${esc(k)}</label>
+      <input type="number" id="k-${esc(k)}" data-kind="${esc(k)}" min="0" step="5" inputmode="numeric" value="${n}">
+      <div class="steps"><button type="button" data-step="-5" aria-label="5 menys de ${esc(k)}">−5</button><button type="button" data-step="5" aria-label="5 més de ${esc(k)}">+5</button></div>
+    </div>`).join('');
+  $('basis').textContent = `proporcions del ${last.year}, arrodonit cap amunt`;
 
   let text = '';
   const update = () => {
     const want = {};
-    $('kinds').querySelectorAll('input').forEach((el) => { want[el.dataset.kind] = Math.max(0, +el.value || 0); });
+    $('kinds').querySelectorAll('input').forEach((el) => { want[el.dataset.kind] = Math.max(0, Math.round(+el.value) || 0); });
     const rows = calc(last, want).filter((r) => r.amount > 0);
     $('total').textContent = `${sum(want)} panellets`;
+    $('tray').innerHTML = tray(want);
+    $('tray').setAttribute('role', 'img');
+    $('tray').setAttribute('aria-label', trayLabel(want));
     $('shop').innerHTML = rows.map((r) => `<dt>${esc(qty(r))}</dt><dd>${esc(r.name)}${r.note ? ` <small>· ${esc(r.note)}</small>` : ''}</dd>`).join('')
       + (last.extras || []).map((e) => `<dt>+</dt><dd>${esc(e)}</dd>`).join('');
     text = rows.map((r) => `${qty(r)} ${r.name}${r.note ? ` (${r.note})` : ''}`).concat(last.extras || []).join('\n');
@@ -146,17 +148,24 @@ fetch('data/years.json').then((r) => r.json()).then((years) => {
   };
   $('calc').addEventListener('input', update);
   $('calc').addEventListener('submit', (e) => e.preventDefault());
+  $('calc').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-step]');
+    if (!b) return;
+    const input = b.closest('.clip').querySelector('input');
+    input.value = Math.max(0, (+input.value || 0) + +b.dataset.step);
+    update();
+  });
   update();
 
   $('copy').addEventListener('click', () => {
-    navigator.clipboard.writeText('Panellets\n' + text)
-      .then(() => { $('copied').textContent = 'Copiada'; })
-      .catch(() => { getSelection().selectAllChildren($('shop')); $('copied').textContent = 'Seleccionada: copia-la tu'; });
+    navigator.clipboard.writeText('panellets\n' + text)
+      .then(() => { $('copied').textContent = 'copiada'; })
+      .catch(() => { getSelection().selectAllChildren($('shop')); $('copied').textContent = 'seleccionada: copia-la tu'; });
   });
 
-  $('years').insertAdjacentHTML('beforeend', years.map(renderYear).join(''));
+  $('years').innerHTML = years.map(renderYear).join('');
 }).catch(() => {
-  $('years').insertAdjacentHTML('beforeend', '<p class="error">No s\'ha pogut llegir data/years.json. Mira si hi falta una coma.</p>');
+  $('years').innerHTML = '<p class="error">no s\'ha pogut llegir data/years.json. mira si hi falta una coma.</p>';
 });
 </script>
 </body>
